@@ -20,7 +20,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.apache.commons.lang3.RandomStringUtils;
 
-import java.util.HashSet;
+import java.util.List;
 
 import static com.shop.user.constant.UserImplConstant.*;
 import static com.shop.user.enumeration.Role.ROLE_ADMIN;
@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User register(String username, String email) throws MessagingException, UserNotFoundException, EmailExistException, UsernameExistException {
+    public User registration(String username, String email) throws MessagingException, UserNotFoundException, EmailExistException, UsernameExistException {
         validateNewUsernameAndEmail(EMPTY, username, email);
         User user = new User();
         String password = generatePassword();
@@ -57,8 +57,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setPassword(encodedPassword);
         user.setActivity(Activity.ACTIVE.name());
         user.setBalance(0.0);
-        user.setNotifications(new HashSet<>());
-        user.setOrganization(new HashSet<>());
         if (userRepository.findAll().isEmpty()) {
             user.setRole(ROLE_ADMIN.name());
             user.setAuthorities(ROLE_ADMIN.getAuthorities());

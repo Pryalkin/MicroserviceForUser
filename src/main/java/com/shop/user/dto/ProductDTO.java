@@ -1,15 +1,14 @@
 package com.shop.user.dto;
 
-import com.shop.user.model.product.Characteristics;
+import com.shop.user.model.product.Characteristic;
 import com.shop.user.model.product.Keyword;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-import java.util.List;
 import java.util.Set;
 
 @Data
-public class ProductDto {
+public class ProductDTO {
 
     @NotNull
     private String name;
@@ -18,7 +17,7 @@ public class ProductDto {
     @NotNull
     private String organization;
     @NotNull
-    private Set<Characteristics> characteristics;
+    private Set<Characteristic> characteristics;
     @NotNull
     private Double price;
     @NotNull

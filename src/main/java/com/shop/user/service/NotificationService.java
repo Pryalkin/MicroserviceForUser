@@ -1,9 +1,9 @@
 package com.shop.user.service;
 
-import com.shop.user.model.Notification;
+import com.shop.user.dto.NotificationDTO;
 
 import java.util.Set;
 
 public interface NotificationService {
-    Set<Notification> get(String username);
+    Set<NotificationDTO> get(String username);
 }

@@ -25,21 +25,55 @@ import static org.springframework.http.HttpStatus.*;
 @RestControllerAdvice
 public class ExceptionHandling {
 
-    @ExceptionHandler(NotFoundOrganizationException.class)
-    public ResponseEntity<HttpResponse> notFoundOrganizationException(NotFoundOrganizationException exception) {
+    // UserController, PurchaseController
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<HttpResponse> userNotFoundException(UserNotFoundException exception) {
         return createHttpResponse(BAD_REQUEST, exception.getMessage());
     }
 
-    @ExceptionHandler(ProductDoesNotExistException.class)
-    public ResponseEntity<HttpResponse> productDoesNotExistException(ProductDoesNotExistException exception) {
+    // UserController
+    @ExceptionHandler(EmailExistException.class)
+    public ResponseEntity<HttpResponse> emailExistException(EmailExistException exception) {
         return createHttpResponse(BAD_REQUEST, exception.getMessage());
     }
 
+    // UserController
+    @ExceptionHandler(UsernameExistException.class)
+    public ResponseEntity<HttpResponse> usernameExistException(UsernameExistException exception) {
+        return createHttpResponse(BAD_REQUEST, exception.getMessage());
+    }
+
+    // UserController, PurchaseController, OrganizationController, NotificationController
+    @ExceptionHandler(NoRightException.class)
+    public ResponseEntity<HttpResponse> noRightException(NoRightException exception) {
+        return createHttpResponse(BAD_REQUEST, exception.getMessage());
+    }
+
+    // PurchaseController
     @ExceptionHandler(NotEnoughMoneyException.class)
     public ResponseEntity<HttpResponse> notEnoughMoneyException(NotEnoughMoneyException exception) {
         return createHttpResponse(BAD_REQUEST, exception.getMessage());
     }
 
+    // ProductController
+    @ExceptionHandler(NotFoundOrganizationException.class)
+    public ResponseEntity<HttpResponse> notFoundOrganizationException(NotFoundOrganizationException exception) {
+        return createHttpResponse(BAD_REQUEST, exception.getMessage());
+    }
+
+    // ProductController
+    @ExceptionHandler(ProductDoesNotExistException.class)
+    public ResponseEntity<HttpResponse> productDoesNotExistException(ProductDoesNotExistException exception) {
+        return createHttpResponse(BAD_REQUEST, exception.getMessage());
+    }
+
+    // OrganizationController
+    @ExceptionHandler(OrganizationNameExistsException.class)
+    public ResponseEntity<HttpResponse> organizationNameExistsException(OrganizationNameExistsException exception) {
+        return createHttpResponse(BAD_REQUEST, exception.getMessage());
+    }
+
+    //---------------------------------------------------------------------
     @ExceptionHandler(DisabledException.class)
     public ResponseEntity<HttpResponse> accountDisabledException() {
         return createHttpResponse(BAD_REQUEST, ACCOUNT_DISABLED);
@@ -64,31 +98,6 @@ public class ExceptionHandling {
     public ResponseEntity<HttpResponse> tokenExpiredException(TokenExpiredException exception) {
         return createHttpResponse(UNAUTHORIZED, exception.getMessage());
     }
-
-    @ExceptionHandler(EmailExistException.class)
-    public ResponseEntity<HttpResponse> emailExistException(EmailExistException exception) {
-        return createHttpResponse(BAD_REQUEST, exception.getMessage());
-    }
-
-    @ExceptionHandler(UsernameExistException.class)
-    public ResponseEntity<HttpResponse> usernameExistException(UsernameExistException exception) {
-        return createHttpResponse(BAD_REQUEST, exception.getMessage());
-    }
-
-//    @ExceptionHandler(EmailNotFoundException.class)
-//    public ResponseEntity<HttpResponse> emailNotFoundException(EmailNotFoundException exception) {
-//        return createHttpResponse(BAD_REQUEST, exception.getMessage());
-//    }
-
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<HttpResponse> userNotFoundException(UserNotFoundException exception) {
-        return createHttpResponse(BAD_REQUEST, exception.getMessage());
-    }
-
-//    @ExceptionHandler(NoHandlerFoundException.class)
-//    public ResponseEntity<HttpResponse> noHandlerFoundException(NoHandlerFoundException e) {
-//        return createHttpResponse(BAD_REQUEST, "There is no mapping for this URL");
-//    }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<HttpResponse> methodNotSupportedException(HttpRequestMethodNotSupportedException exception) {

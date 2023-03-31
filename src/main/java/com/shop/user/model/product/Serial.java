@@ -1,5 +1,6 @@
 package com.shop.user.model.product;
 
+import com.shop.user.model.Purchase;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -12,15 +13,19 @@ import java.io.Serializable;
 @Getter
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Evaluation implements Serializable {
+public class Serial implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private Long id;
-    @NotNull
+    @Column(name = "product_number")
     @EqualsAndHashCode.Include
-    private Integer value;
+    private String productNumber;
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     private Product product;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Purchase purchase;
+
 }

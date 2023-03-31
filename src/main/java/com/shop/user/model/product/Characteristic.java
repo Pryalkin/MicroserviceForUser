@@ -2,26 +2,27 @@ package com.shop.user.model.product;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class Characteristics implements Serializable {
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+public class Characteristic implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotNull
+    @EqualsAndHashCode.Include
     private String characteristic;
     @NotNull
+    @EqualsAndHashCode.Include
     private String description;
-    @ManyToOne
-    @JoinColumn(name = "product_id", insertable = false, updatable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Product product;
 }

@@ -1,5 +1,6 @@
 package com.shop.user.service.impl;
 
+import com.shop.user.exception.model.OrganizationNameExistsException;
 import com.shop.user.model.user.Organization;
 import com.shop.user.model.user.User;
 import com.shop.user.repository.OrganizationRepo;
@@ -16,9 +17,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashSet;
 
+import static com.shop.user.constant.ExceptionConstant.ORGANIZATION_NAME_EXISTS;
 import static com.shop.user.constant.FileConstant.*;
 import static com.shop.user.constant.UserImplConstant.NO_USER_FOUND_BY_USERNAME;
 import static com.shop.user.enumeration.Activity.UNREGISTERED;
@@ -33,34 +33,40 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     @Transactional
-    public void registerAnOrganization(String name, String description, String username, MultipartFile profileImage) throws IOException {
+    public void registerAnOrganization(String name, String description, String username, MultipartFile logoImage) throws IOException, OrganizationNameExistsException {
+        validateNameOrganization(name);
         User user = userRepo.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(NO_USER_FOUND_BY_USERNAME + username));
         Organization organization = new Organization();
         organization.setName(name);
         organization.setDescription(description);
-        organization.setProducts(new HashSet<>());
         organization.setActivity(UNREGISTERED.name());
-        organization = saveProfileImage(organization, user.getUsername(), profileImage);
-        user.getOrganization().add(organization);
+        organization = saveLogoImage(organization, user.getUsername(), logoImage);
+        user.addOrganization(organization);
         userRepo.save(user);
     }
 
-    private Organization saveProfileImage(Organization organization, String username, MultipartFile profileImage) throws IOException {
-        if (profileImage != null){
+    private void validateNameOrganization(String name) throws OrganizationNameExistsException {
+        if (organizationRepo.findByName(name).isPresent()){
+            throw new OrganizationNameExistsException(ORGANIZATION_NAME_EXISTS);
+        }
+    }
+
+    private Organization saveLogoImage(Organization organization, String username, MultipartFile logoImage) throws IOException {
+        if (logoImage != null){
             Path userFolder = Paths.get(USER_FOLDER + username).toAbsolutePath().normalize();
             if (!Files.exists(userFolder)){
                 Files.createDirectories(userFolder);
             }
             Files.deleteIfExists(Paths.get(userFolder + organization.getName() + DOT + JPG_EXTENSION));
-            Files.copy(profileImage.getInputStream(), userFolder.resolve(organization.getName() + DOT + JPG_EXTENSION), REPLACE_EXISTING);
-            organization.setLogo(setProfileImageUrl(username, organization.getName()));
-            return organizationRepo.save(organization);
+            Files.copy(logoImage.getInputStream(), userFolder.resolve(organization.getName() + DOT + JPG_EXTENSION), REPLACE_EXISTING);
+            organization.setLogo(setLogoImageUrl(username, organization.getName()));
+            return organization;
         }
-        return organizationRepo.save(organization);
+        return organization;
     }
 
-    private String setProfileImageUrl(String username, String name) {
+    private String setLogoImageUrl(String username, String name) {
         return ServletUriComponentsBuilder.fromCurrentContextPath().
                 path(USER_IMAGE_PATH + username + FORWARD_SLASH + name + DOT + JPG_EXTENSION).toUriString();
     }

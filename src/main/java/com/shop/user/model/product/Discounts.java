@@ -1,42 +1,37 @@
-package com.shop.user.model.user;
+package com.shop.user.model.product;
 
-import com.shop.user.model.product.Product;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
 @Getter
+@Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Organization implements Serializable{
+public class Discounts {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @EqualsAndHashCode.Include
-    private String name;
-    @EqualsAndHashCode.Include
-    private String description;
-    private String logo;
+    private Double discount;
+    private String discountNumber;
+    private LocalDate before;
+    @NotNull
     @OneToMany(
-            mappedBy = "organization",
+            mappedBy = "discount",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
     private Set<Product> products = new HashSet<>();
-    private String activity;
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
 
     public void addProduct(Product product) {
         products.add(product);
-        product.setOrganization(this);
+        product.setDiscount(this);
     }
-
 }

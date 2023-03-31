@@ -12,6 +12,9 @@ public class HttpAnswer {
     public static final String PRODUCT_RATED = "Product rated. ";
     public static final String YOU_HAVE_ALREADY_LEFT_A_REVIEW = "You have already left a review";
     public static final String PRODUCT_REVIEW = "You have successfully submitted a review";
+    public static final String PRODUCTS_RETURNED_SUCCESSFULLY = "Products returned successfully";
+    public static final String MORE_THAN_24_HOURS = "Your products were purchased more than 24 hours ago";
+
 
     public static ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
         HttpResponse body = new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(), message.toUpperCase());

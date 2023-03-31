@@ -13,5 +13,7 @@ public class ExceptionConstant {
     public static final String NO_SUCH_ORGANIZATION_EXISTS = "No such organization exists";
     public static final String NOT_ENOUGH_MONEY = "You don't have enough money";
     public static final String PRODUCT_DOEST_NOT_EXIST = "Product does not exist";
+    public static final String ORGANIZATION_NAME_EXISTS = "Organization name already exists";
+    public static final String THE_REQUEST_DOES_NOT_MATCH_YOUR_RIGHTS = "The request does not match your rights";
 
 }

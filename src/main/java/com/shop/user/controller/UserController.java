@@ -2,6 +2,7 @@ package com.shop.user.controller;
 
 import com.shop.user.exception.ExceptionHandling;
 import com.shop.user.exception.model.EmailExistException;
+import com.shop.user.exception.model.NoRightException;
 import com.shop.user.exception.model.UserNotFoundException;
 import com.shop.user.exception.model.UsernameExistException;
 import com.shop.user.model.user.UserPrincipal;
@@ -9,6 +10,7 @@ import com.shop.user.model.user.User;
 import com.shop.user.service.UserService;
 import com.shop.user.utility.JWTTokenProvider;
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +18,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static com.shop.user.constant.SecurityConstant.JWT_TOKEN_HEADER;
+import static com.shop.user.controller.security.ValidUsernameSecurity.checkUsernameForValidity;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
@@ -29,8 +34,8 @@ public class UserController extends ExceptionHandling {
     private final JWTTokenProvider jwtTokenProvider;
 
     @PostMapping("/registration")
-    public ResponseEntity<User> register(@RequestBody User user) throws UserNotFoundException, EmailExistException, MessagingException, UsernameExistException {
-        User newUser = userService.register(user.getUsername(), user.getEmail());
+    public ResponseEntity<User> registration(@RequestBody User user) throws UserNotFoundException, EmailExistException, MessagingException, UsernameExistException {
+        User newUser = userService.registration(user.getUsername(), user.getEmail());
         return new ResponseEntity<>(newUser, OK);
     }
 
@@ -44,9 +49,10 @@ public class UserController extends ExceptionHandling {
     }
 
     @PostMapping("/getUser/{username}")
-    public ResponseEntity<User> getUser(@PathVariable String username) {
+    public ResponseEntity<User> getUser(@PathVariable String username, HttpServletRequest request) throws NoRightException {
+        checkUsernameForValidity(request, jwtTokenProvider, username);
         User user = userService.getUser(username);
-        return new ResponseEntity<>(user, OK);
+        return new ResponseEntity<>(userService.getUser(username), OK);
     }
 
     private void authenticate(String username, String password) {

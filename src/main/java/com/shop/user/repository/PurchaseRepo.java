@@ -11,4 +11,5 @@ import java.util.Set;
 public interface PurchaseRepo extends JpaRepository<Purchase, Long> {
 
     Optional<Set<Purchase>> findByUserUsername(String username);
+    Optional<Purchase> findByPurchaseNumber(String purchaseNumber);
 }

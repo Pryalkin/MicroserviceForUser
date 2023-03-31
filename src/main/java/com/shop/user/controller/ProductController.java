@@ -1,23 +1,29 @@
 package com.shop.user.controller;
 
 import com.shop.user.constant.HttpAnswer;
-import com.shop.user.dto.ProductDto;
-import com.shop.user.dto.ProductDto2;
+import com.shop.user.dto.ProductDTO;
+import com.shop.user.dto.PurchasedProductDTO;
+import com.shop.user.dto.PurchasedSerialProductDTO;
+import com.shop.user.dto.ReviewAndEvaluationDTO;
 import com.shop.user.exception.ExceptionHandling;
+import com.shop.user.exception.model.NoRightException;
 import com.shop.user.exception.model.NotFoundOrganizationException;
 import com.shop.user.exception.model.ProductDoesNotExistException;
 import com.shop.user.model.HttpResponse;
 import com.shop.user.model.product.Product;
 import com.shop.user.service.ProductService;
+import com.shop.user.utility.JWTTokenProvider;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static com.shop.user.constant.HttpAnswer.APPLICATION_SENT;
+import static com.shop.user.controller.security.ValidUsernameSecurity.checkUsernameForValidity;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
@@ -26,10 +32,11 @@ import static org.springframework.http.HttpStatus.OK;
 public class ProductController extends ExceptionHandling {
 
     private final ProductService productService;
+    private final JWTTokenProvider jwtTokenProvider;
 
     @PostMapping("/create")
     @PreAuthorize("hasAnyAuthority('user:create_product')")
-    public ResponseEntity<HttpResponse> create(@RequestBody ProductDto productDto) throws NotFoundOrganizationException {
+    public ResponseEntity<HttpResponse> create(@RequestBody ProductDTO productDto) throws NotFoundOrganizationException {
         productService.registerAProduct(productDto);
         return HttpAnswer.response(OK, APPLICATION_SENT);
     }
@@ -40,10 +47,9 @@ public class ProductController extends ExceptionHandling {
     }
 
     @PostMapping("/evaluationAndReview")
-    public ResponseEntity<HttpResponse> makeEvaluationAndReview(@RequestBody ProductDto2 productDto2) throws ProductDoesNotExistException {
-        String message = productService.makeEvaluationAndReview(productDto2);
+    public ResponseEntity<HttpResponse> makeEvaluationAndReview(@RequestBody ReviewAndEvaluationDTO reviewAndEvaluationDTO) throws ProductDoesNotExistException {
+        String message = productService.makeEvaluationAndReview(reviewAndEvaluationDTO);
         return HttpAnswer.response(OK, message);
     }
-
 
 }

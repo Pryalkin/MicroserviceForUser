@@ -1,17 +1,18 @@
 package com.shop.user.service;
 
-import com.shop.user.dto.ProductDto;
-import com.shop.user.dto.ProductDto2;
+import com.shop.user.dto.*;
 import com.shop.user.exception.model.NotFoundOrganizationException;
 import com.shop.user.exception.model.ProductDoesNotExistException;
 import com.shop.user.model.product.Product;
 
+import java.util.Map;
 import java.util.Set;
 
 public interface ProductService {
-    void registerAProduct(ProductDto productDto) throws NotFoundOrganizationException;
+    void registerAProduct(ProductDTO productDto) throws NotFoundOrganizationException;
 
     Set<Product> getAllRegisteredProducts();
 
-    String makeEvaluationAndReview(ProductDto2 productDto2) throws ProductDoesNotExistException;
+    String makeEvaluationAndReview(ReviewAndEvaluationDTO productDto2) throws ProductDoesNotExistException;
+
 }
